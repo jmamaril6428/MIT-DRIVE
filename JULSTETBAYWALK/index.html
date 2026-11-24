@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fafafa">
+  <meta name="description" content="Photo gallery of a beachside property in Lingayen, Pangasinan.">
+  <title>Beachside Property | Photo Gallery</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="site">
+    <header class="heading">
+      <p class="eyebrow">PROPERTY PHOTO GALLERY</p>
+      <h1>Beachside Property</h1>
+      <p>Lingayen, Pangasinan, Philippines</p>
+    </header>
+
+    <section class="gallery" aria-label="Property photo gallery">
+      <div class="viewer" id="viewer">
+        <img id="mainPhoto" src="photos/roofdeck-stairs.jpg" alt="Staircase to rooftop deck" fetchpriority="high">
+        <div class="photo-counter" id="photoCounter" aria-live="polite">5 / 9</div>
+        <div class="viewer-actions">
+          <button id="editBtn" class="edit-btn" type="button" title="Replace this image in your browser">Edit</button>
+          <div class="action-right">
+            <button id="prevBtn" class="circle-btn" type="button" title="Previous photo" aria-label="Previous photo">&#10094;</button>
+            <button id="nextBtn" class="circle-btn" type="button" title="Next photo" aria-label="Next photo">&#10095;</button>
+            <button id="shareBtn" class="circle-btn" type="button" title="Share gallery" aria-label="Share gallery">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V3m0 0L7 8m5-5 5 5"/><path d="M5 13v5a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-5"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="thumb-strip" id="thumbStrip" role="group" aria-label="Choose a property photo"></div>
+    </section>
+    <p class="photo-caption" id="photoCaption" aria-live="polite">Staircase to the rooftop deck</p>
+    <p class="tip">Select a thumbnail or use the left and right arrow keys to browse.</p>
+    <input type="file" id="photoUpload" accept="image/*" hidden>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </main>
+</body>
+</html>
