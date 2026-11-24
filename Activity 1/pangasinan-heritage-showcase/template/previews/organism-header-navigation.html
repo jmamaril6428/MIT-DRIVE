@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Header Navigation</title>
+<link rel="stylesheet" href="../styles/tokens.css"><link rel="stylesheet" href="../styles/base.css">
+<link rel="stylesheet" href="../styles/components.css"><link rel="stylesheet" href="preview.css">
+</head><body class="preview-page">
+<div class="preview-head"><p class="preview-kicker">Organism</p><h1 class="preview-title">Header Navigation</h1><p class="preview-note">Disclosure below 768px; inline navigation from 768px; search shortcut from 960px. The menu works with mouse and keyboard.</p></div>
+<div class="preview-stack">
+<section class="preview-row"><span class="preview-row__label">360px parent — mobile disclosure</span>
+<div class="header-container" style="width:360px"><header class="site-header">
+<a class="skip-link" href="#main-content">Skip to content</a>
+<div class="site-header__bar" style="padding:12px"><a href="../index.html" class="site-header__brand"><span class="site-header__mark" aria-hidden="true">P</span><span class="site-header__brand-text"><span class="site-header__brand-name">Pangasinan</span><span class="site-header__brand-sub">Heritage showcase</span></span></a>
+<div class="site-header__actions"><button class="site-header__menu-btn" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle aria-label="Open navigation"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></div></div>
+<nav class="site-header__mobile-nav" id="mobile-menu" aria-label="Mobile primary" hidden><a class="nav-item__link" href="#main-content" aria-current="page">Destinations</a><a class="nav-item__link" href="../index.html">Component library</a></nav>
+</header></div></section>
+<section class="preview-row"><span class="preview-row__label">1080px parent — full navigation and search</span>
+<div class="header-container" style="width:1080px"><header class="site-header">
+<div class="site-header__bar" style="padding:12px"><a href="../index.html" class="site-header__brand"><span class="site-header__mark" aria-hidden="true">P</span><span class="site-header__brand-text"><span class="site-header__brand-name">Pangasinan</span><span class="site-header__brand-sub">Heritage showcase</span></span></a>
+<nav class="site-header__nav" aria-label="Desktop primary"><ul class="site-header__nav-list"><li><a class="nav-item__link" href="#main-content" aria-current="page">Destinations</a></li><li><a class="nav-item__link" href="../index.html">Library</a></li></ul></nav>
+<div class="site-header__actions"><a href="molecule-search-form.html" class="site-header__search">Search heritage sites</a><a class="btn site-header__cta" href="organism-heritage-grid.html">Explore sites</a></div>
+</div></header></div></section>
+<main id="main-content" tabindex="-1"><h2 class="type-h3">Main content target</h2><p>Keyboard users can bypass the header. Escape closes the mobile menu and returns focus to its button.</p></main>
+</div><script src="../demo.js"></script></body></html>

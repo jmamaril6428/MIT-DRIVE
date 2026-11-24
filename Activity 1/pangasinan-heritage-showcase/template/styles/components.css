@@ -1,0 +1,500 @@
+/* ==========================================================================
+   Pangasinan Heritage Design System - Component layer
+   Atomic Design: ATOMS -> MOLECULES -> ORGANISMS
+
+   Responsive strategy: this library uses CONTAINER QUERIES, never viewport
+   media queries, for component layout. A component therefore looks correct
+   whether it sits in a phone column, a sidebar, or a full desktop region.
+   Breakpoints (mirrors the --cq-* tokens in tokens.css):
+     xs 20rem (320px) | sm 30rem (480px) | md 45rem (720px) | lg 60rem (960px)
+   Each component names its own containment context, e.g.
+     .heritage-card { container-type: inline-size; container-name: card; }
+   and descendants respond with @container card (...).
+   ========================================================================== */
+
+
+/* ==========================================================================
+   ATOM 1 - TYPOGRAPHY
+   Usage: the only sanctioned way to set text style. Never set font-size in a
+   component; compose a .type-* class instead, so the scale stays consistent.
+   ========================================================================== */
+
+.type-display, .type-h1, .type-h2, .type-h3 { font-family: var(--font-display); }
+
+.type-display { font-size: var(--fs-display); line-height: var(--lh-tight);
+                letter-spacing: var(--ls-tight); font-weight: var(--fw-bold);
+                color: var(--color-text-strong); margin: 0; }
+.type-h1 { font-size: var(--fs-h1); line-height: var(--lh-heading);
+           letter-spacing: var(--ls-tight); font-weight: var(--fw-bold);
+           color: var(--color-text-strong); margin: 0; }
+.type-h2 { font-size: var(--fs-h2); line-height: var(--lh-heading);
+           font-weight: var(--fw-semibold); color: var(--color-text-strong); margin: 0; }
+.type-h3 { font-size: var(--fs-h3); line-height: var(--lh-heading);
+           font-weight: var(--fw-semibold); color: var(--color-text-strong); margin: 0; }
+.type-h4 { font-size: var(--fs-h4); font-weight: var(--fw-semibold);
+           color: var(--color-text-strong); margin: 0; }
+.type-body    { font-size: var(--fs-body);    line-height: var(--lh-body); margin: 0; }
+.type-body-lg { font-size: var(--fs-body-lg); line-height: var(--lh-body); margin: 0; }
+.type-small   { font-size: var(--fs-small);   line-height: 1.5; margin: 0; }
+.type-caption { font-size: var(--fs-caption); line-height: 1.5;
+                color: var(--color-text-muted); margin: 0; }
+
+/* Eyebrow / kicker label used above section headings. */
+.type-eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0;
+}
+
+.type-measure { max-width: 68ch; }
+
+/* Prose container: on a wide reading column we cap the measure for legibility
+   (WCAG 1.4.8 is AAA, but good practice at AA).  */
+.type-prose { container-type: inline-size; container-name: prose; }
+@container prose (max-width: 20rem) {
+  .type-h1 { font-size: var(--fs-h2); }
+  .type-h2 { font-size: var(--fs-h3); }
+}
+@container prose (min-width: 45rem) { p { max-width: 68ch; } }
+
+
+/* ==========================================================================
+   ATOM 2 - BUTTON
+   Usage: every clickable action. Use <button> for actions and <a class="btn">
+   for navigation to a URL. Minimum height is --target-min (44px) for WCAG 2.5.5.
+   Responsiveness: inside any container named `action-bar` that is narrower than
+   26rem, buttons expand to full width and stack - the standard mobile form
+   pattern. Add .btn--inline to opt out of that behaviour.
+   ========================================================================== */
+
+.btn {
+  --btn-bg: var(--color-primary);
+  --btn-fg: var(--color-on-primary);
+  --btn-border: transparent;
+  --btn-bg-hover: var(--color-primary-hover);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--btn-border);
+  border-radius: var(--radius-pill);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-standard),
+              box-shadow var(--dur-fast) var(--ease-standard),
+              transform var(--dur-fast) var(--ease-standard);
+}
+
+.btn:hover { background: var(--btn-bg-hover); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled, .btn[aria-disabled="true"] {
+  opacity: 0.55; cursor: not-allowed; transform: none;
+}
+
+.btn--primary   { --btn-bg: var(--color-primary); --btn-fg: var(--color-on-primary);
+                  --btn-bg-hover: var(--color-primary-hover); }
+.btn--accent    { --btn-bg: var(--color-accent);  --btn-fg: var(--color-on-accent);
+                  --btn-bg-hover: var(--color-accent-hover); }
+.btn--secondary { --btn-bg: transparent; --btn-fg: var(--color-primary);
+                  --btn-border: var(--color-border-strong); --btn-bg-hover: var(--color-primary-subtle); }
+.btn--ghost     { --btn-bg: transparent; --btn-fg: var(--color-primary);
+                  --btn-bg-hover: var(--color-primary-subtle); padding-inline: var(--space-4); }
+.btn--danger    { --btn-bg: var(--color-danger); --btn-fg: var(--white);
+                  --btn-bg-hover: #8E1D17; }
+
+.btn--sm { min-height: 44px; padding: var(--space-2) var(--space-4);
+           font-size: var(--fs-caption); }
+.btn--lg { min-height: 52px; padding: var(--space-4) var(--space-8);
+           font-size: var(--fs-body); }
+
+.btn--block { width: 100%; }
+.btn__icon { flex: none; width: 1.15em; height: 1.15em; fill:none;
+  stroke:currentColor; stroke-width:1.75; stroke-linecap:round; stroke-linejoin:round; }
+
+/* Stacked, full-width actions inside a narrow action bar. */
+@container action-bar (max-width: 26rem) {
+  .btn:not(.btn--inline) { width: 100%; }
+}
+
+
+/* ==========================================================================
+   ATOM 3 - ICON
+   Usage: inline SVG glyphs drawn with currentColor so they inherit the text
+   colour of their context automatically. Always decorative by default
+   (aria-hidden) unless it is the only label, in which case give the control an
+   accessible name.
+   Responsiveness: .icon--adaptive grows a step in a wide container.
+   ========================================================================== */
+
+.icon { width: 1rem; height: 1rem; flex: none; fill: none;
+        stroke: currentColor; stroke-width: 1.75;
+        stroke-linecap: round; stroke-linejoin: round; }
+.icon--sm { width: 0.875rem; height: 0.875rem; }
+.icon--md { width: 1.25rem;  height: 1.25rem; }
+.icon--lg { width: 1.75rem;  height: 1.75rem; }
+
+@container (min-width: 45rem) { .icon--adaptive { width: 1.375rem; height: 1.375rem; } }
+
+
+/* ==========================================================================
+   ATOM 4 - IMAGE / MEDIA
+   Usage: every content photograph. Reserves space with aspect-ratio to protect
+   CLS, lazy-loads below-the-fold media, and always carries alt text (empty
+   alt="" for purely decorative images).
+   Responsiveness: crop ratio changes with the size of the enclosing `media`
+   container - 4:3 on a narrow column, 16:9 normal, 21:9 cinematic when wide.
+   ========================================================================== */
+
+.media { container-type: inline-size; container-name: media; margin: 0; }
+.media__frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  aspect-ratio: 16 / 9;
+}
+.media__img { width: 100%; height: 100%; object-fit: cover; }
+.media__caption { margin-top: var(--space-2); font-size: var(--fs-caption);
+                  color: var(--color-text-muted); }
+
+@container media (max-width: 20rem) { .media__frame { aspect-ratio: 4 / 3; } }
+@container media (min-width: 45rem) { .media__frame { aspect-ratio: 21 / 9; } }
+
+
+/* ==========================================================================
+   ATOM 5 - COLOUR TOKEN SWATCH
+   Usage: documentation aid for this manual and for the style guide page. Not
+   used inside product UI. Demonstrates that layout can respond to a container.
+   ========================================================================== */
+
+.swatch-group { container-type: inline-size; container-name: swatches; }
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+.swatch { border: 1px solid var(--color-border-subtle);
+          border-radius: var(--radius-md); overflow: hidden; }
+.swatch__chip { height: 3rem; }
+.swatch__meta { padding: var(--space-2) var(--space-3); background: var(--white);
+                display: flex; flex-direction: column; gap: 2px; }
+.swatch__name { font-size: var(--fs-caption); font-weight: var(--fw-semibold);
+                color: var(--color-text-strong); }
+.swatch__value { font-family: var(--font-mono); font-size: 0.75rem;
+                 color: var(--color-text-muted); }
+
+@container swatches (min-width: 30rem) { .swatch-grid { grid-template-columns: repeat(4, 1fr); } }
+@container swatches (min-width: 45rem) { .swatch-grid { grid-template-columns: repeat(6, 1fr); } }
+
+
+/* ==========================================================================
+   SHARED MICRO-PARTS (used by molecules/organisms)
+   ========================================================================== */
+
+.tag { display: inline-flex; align-items: center; gap: var(--space-1);
+       padding: 0.15rem var(--space-2); border-radius: var(--radius-pill);
+       background: var(--color-primary-subtle); color: var(--sea-700);
+       font-size: 0.75rem; font-weight: var(--fw-medium); white-space: nowrap; }
+.tag--accent { background: var(--color-accent-subtle); color: var(--gold-800); }
+
+.badge { display: inline-flex; align-items: center; justify-content: center;
+         min-width: 1.25rem; height: 1.25rem; padding-inline: 0.35rem;
+         border-radius: var(--radius-pill); background: var(--color-accent);
+         color: var(--color-on-accent); font-size: 0.7rem; font-weight: var(--fw-bold); }
+
+.rating { display: inline-flex; align-items: center; gap: var(--space-1);
+          color: var(--gold-700); font-size: var(--fs-caption);
+          font-weight: var(--fw-semibold); }
+.rating__icon { width: 0.95rem; height: 0.95rem; }
+.rating__count { color: var(--color-text-muted); font-weight: var(--fw-regular); }
+
+
+/* ==========================================================================
+   MOLECULE 1 - HERITAGE CARD
+   Usage: displays ONE tourist site preview. Use it exclusively inside the
+   Heritage Grid (or a single featured slot); never for unrelated content.
+   Responsiveness (container `card`):
+     <= 20rem   compact  : image on top, description and review count hidden
+     20-32rem   stacked  : full image, description clamped to 2 lines
+     >= 32rem   horizontal: media left 42%, body right, CTA inline
+   ========================================================================== */
+
+.card-container { container-type: inline-size; container-name: card; min-width:0; }
+.heritage-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+  transition: box-shadow var(--dur-base) var(--ease-standard),
+              transform var(--dur-base) var(--ease-standard);
+}
+.heritage-card:hover { box-shadow: var(--shadow-3); transform: translateY(-2px); }
+
+.heritage-card__media { position: relative; }
+.heritage-card__media .media__frame { aspect-ratio: 3 / 2; }
+.heritage-card__flag {
+  position: absolute; inset-block-start: var(--space-3); inset-inline-start: var(--space-3);
+  padding: 0.15rem var(--space-2); border-radius: var(--radius-pill);
+  background: var(--color-on-accent); color: var(--gold-800);
+  font-size: 0.7rem; font-weight: var(--fw-bold); letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+}
+
+.heritage-card__body { display: flex; flex-direction: column; gap: var(--space-2); }
+.heritage-card__place {
+  display: flex; align-items: center; gap: var(--space-1);
+  font-size: var(--fs-caption); font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-accent);
+}
+.heritage-card__title { font-family: var(--font-display); font-size: var(--fs-h3);
+                        font-weight: var(--fw-semibold); line-height: var(--lh-heading);
+                        color: var(--color-text-strong); margin: 0; }
+.heritage-card__title a { color: inherit; text-decoration: none; }
+.heritage-card__title a:hover { text-decoration: underline; }
+
+.heritage-card__desc { display: -webkit-box; -webkit-line-clamp: 2;
+                       -webkit-box-orient: vertical; overflow: hidden;
+                       font-size: var(--fs-small); color: var(--color-text-muted); margin: 0; }
+.heritage-card__tags { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.heritage-card__meta { display: flex; align-items: center; justify-content: space-between;
+                       gap: var(--space-2); margin-top: auto; padding-top: var(--space-1); }
+.heritage-card__actions { display: flex; gap: var(--space-2); }
+.heritage-card__actions .btn { flex: 1 1 auto; }
+
+/* --- Container-query behaviour ---------------------------------------- */
+/* Compact: a very narrow column (phone list, sidebar). */
+@container card (max-width: 20rem) {
+  .heritage-card { padding: var(--space-3); gap: var(--space-3); border-radius: var(--radius-md); }
+  .heritage-card__desc,
+  .heritage-card__tags .tag:nth-child(n + 3),
+  .rating__count { display: none; }
+  .heritage-card__title { font-size: var(--fs-h4); }
+}
+/* Wide: turn the card into a horizontal media object. */
+@container card (min-width: 32rem) {
+  .heritage-card { display: grid; grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
+                   gap: var(--space-5); padding: var(--space-5); align-items: center; }
+  .heritage-card__media .media__frame { aspect-ratio: 4 / 3; height: 100%; }
+  .heritage-card__desc { -webkit-line-clamp: 3; font-size: var(--fs-body); }
+  .heritage-card__actions .btn { flex: 0 0 auto; }
+}
+
+
+/* ==========================================================================
+   MOLECULE 2 - SEARCH FORM
+   Usage: the single search control on the home page and the results page.
+   Responsiveness (container `search`):
+     < 28rem  stacked: field, filter, button each full width
+     >= 28rem inline :  field grows, filter auto, button auto
+   ========================================================================== */
+
+.search-container { container-type:inline-size; container-name:search; }
+.search-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+}
+.search-form__field { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+.search-form__label { font-size: var(--fs-caption); font-weight: var(--fw-semibold);
+                      color: var(--color-text-strong); }
+.search-form__control { position: relative; display: flex; align-items: center; }
+.search-form__control .icon { position: absolute; inset-inline-start: var(--space-3);
+                              color: var(--color-text-muted); pointer-events: none; }
+
+.input, .select {
+  width: 100%;
+  min-height: var(--target-min);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  color: var(--color-text-strong);
+  font-size: var(--fs-body);
+}
+.input::placeholder { color: var(--color-text-muted); }
+.search-form__control .input { padding-inline-start: 2.6rem; }
+.select { appearance: none; padding-inline-end: var(--space-8);
+          background-image: linear-gradient(45deg, transparent 50%, var(--slate-500) 50%),
+                            linear-gradient(135deg, var(--slate-500) 50%, transparent 50%);
+          background-position: right 1.15rem center, right 0.8rem center;
+          background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; }
+
+@container search (min-width: 28rem) {
+  .search-form { flex-direction: row; align-items: flex-end; }
+  .search-form__field--grow { flex: 1 1 auto; }
+  .search-form__field--filter { flex: 0 1 12rem; }
+  .search-form__submit { flex: 0 0 auto; }
+}
+
+
+/* ==========================================================================
+   MOLECULE 3 - NAVIGATION ITEM
+   Usage: one link inside the site header or a footer navigation list. Always
+   marks the current page with aria-current="page".
+   Responsiveness (container `nav-item`):
+     <= 9rem  icon only (label visually hidden, icon still announced)
+     normal   icon + label
+     >= 16rem icon + label + helper description
+   ========================================================================== */
+
+.nav-item {
+  container-type: inline-size;
+  container-name: nav-item;
+}
+.nav-item__link {
+  display: flex; align-items: center; gap: var(--space-3);
+  min-height: var(--target-min);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--color-text-strong);
+  font-size: var(--fs-small); font-weight: var(--fw-medium);
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease-standard);
+}
+.nav-item__link:hover { background: var(--color-primary-subtle); }
+.nav-item__link[aria-current="page"] {
+  background: var(--color-primary-subtle);
+  color: var(--sea-700);
+  font-weight: var(--fw-semibold);
+  box-shadow: inset 3px 0 0 0 var(--color-accent);
+}
+.nav-item__icon { color: var(--color-primary); }
+.nav-item__text { display: flex; flex-direction: column; min-width: 0; }
+.nav-item__label { line-height: 1.3; }
+.nav-item__desc { display: none; font-size: var(--fs-caption);
+                  color: var(--color-text-muted); line-height: 1.4; }
+.nav-item__badge { margin-inline-start: auto; }
+
+@container nav-item (max-width: 9rem) {
+  .nav-item__link { justify-content: center; padding-inline: var(--space-2); }
+  .nav-item__label, .nav-item__badge { position: absolute; width: 1px; height: 1px;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+@container nav-item (min-width: 16rem) { .nav-item__desc { display: block; } }
+
+
+/* ==========================================================================
+   ORGANISM 1 - HERITAGE GRID
+   Usage: the main content region that lists tourist sites. It owns the layout
+   only; the cards inside own their own internal responsiveness, which is the
+   whole point of container queries.
+   Responsiveness (container `heritage-grid`):
+     < 40rem   1 column   |  40-64rem  2 columns  |  >= 64rem  3 columns
+   ========================================================================== */
+
+.grid-container {
+  container-type: inline-size;
+  container-name: heritage-grid;
+}
+.heritage-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--grid-gap);
+}
+@container heritage-grid (min-width: 40rem) {
+  .heritage-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container heritage-grid (min-width: 64rem) {
+  .heritage-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+
+/* ==========================================================================
+   ORGANISM 2 - SITE HEADER (Header Navigation)
+   Usage: the global masthead on every page. Contains the brand, the primary
+   navigation, the search entry point and the main call to action.
+   Accessibility: includes a "skip to content" link, a real <nav> landmark and
+   an aria-expanded disclosure button for the collapsed menu.
+   Responsiveness (container `site-header`):
+     < 48rem  compact : hamburger visible, inline nav + inline search hidden
+     >= 48rem full    : hamburger hidden, inline nav + search + CTA visible
+   ========================================================================== */
+
+.header-container { container-type:inline-size; container-name:site-header; }
+.site-header {
+  position: sticky; inset-block-start: 0; z-index: 20;
+  background: color-mix(in srgb, var(--white) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.site-header__bar {
+  display: flex; align-items: center; gap: var(--space-4);
+  min-height: 68px;
+}
+.site-header__brand { display: flex; align-items: center; gap: var(--space-3);
+                      text-decoration: none; color: var(--color-text-strong); }
+.site-header__mark {
+  display: grid; place-items: center; width: 40px; height: 40px; flex: none;
+  border-radius: var(--radius-md); background: var(--color-primary);
+  color: var(--color-on-primary); font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+}
+.site-header__brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+.site-header__brand-name { font-family: var(--font-display);
+                           font-size: 1.05rem; font-weight: var(--fw-bold); }
+.site-header__brand-sub { font-size: 0.7rem; letter-spacing: var(--ls-wide);
+                          text-transform: uppercase; color: var(--color-text-muted); }
+
+.site-header__nav { display: none; }
+.site-header__nav-list { display: flex; align-items: center; gap: var(--space-1);
+                         list-style: none; margin: 0; padding: 0; }
+.site-header__actions { display: flex; align-items: center; gap: var(--space-2);
+                        margin-inline-start: auto; }
+.site-header__search { display: none; flex: 0 1 20rem; }
+.site-header__cta { display: none; }
+.site-header__menu-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: var(--target-min); height: var(--target-min); flex: none;
+  border: 1px solid var(--color-border-strong); border-radius: var(--radius-md);
+  background: var(--white); color: var(--color-text-strong); cursor: pointer;
+}
+
+.skip-link {
+  position: absolute; inset-block-start: var(--space-2); inset-inline-start: var(--space-4);
+  transform: translateY(-200%);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-primary); color: var(--color-on-primary);
+  border-radius: var(--radius-md); text-decoration: none; font-weight: var(--fw-semibold);
+  transition: transform var(--dur-fast) var(--ease-standard);
+}
+.skip-link:focus { transform: translateY(0); }
+.skip-link:not(:focus) { width:1px; height:1px; padding:0;
+  overflow:hidden; clip-path:inset(50%); }
+.site-header__cta { white-space:nowrap; }
+.site-header__mobile-nav { padding-block:var(--space-3); }
+.site-header__mobile-nav[hidden] { display:none; }
+
+@container site-header (min-width: 48rem) {
+  .site-header__nav { display: block; }
+  .site-header__nav-item .nav-item__desc,
+  .site-header__nav-item .nav-item__badge { display: none; }
+  .site-header__search { display: none; }
+  .site-header__cta { display: inline-flex; }
+  .site-header__menu-btn { display: none; }
+  .site-header__mobile-nav { display:none; }
+}
+@container site-header (min-width: 60rem) {
+  .site-header__search { display: flex; }
+}

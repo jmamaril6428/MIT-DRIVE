@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Framework Selection Report — Pangasinan Heritage</title>
+<style>
+@page{size:A4;margin:19mm 18mm}
+*{box-sizing:border-box}body{font:11pt/1.55 Arial,Helvetica,sans-serif;color:#23353e;margin:0}
+article{max-width:174mm;margin:auto}h1,h2,h3{color:#0b4454;line-height:1.2}h1{font:700 30pt/1.12 Georgia,serif;margin:22mm 0 8mm}h2{font-size:17pt;margin:0 0 5mm}h3{font-size:12pt;margin:6mm 0 3mm}
+p{margin:0 0 4mm}li{margin:2mm 0}a{color:#0e566a}table{border-collapse:collapse;width:100%;font-size:9.3pt;margin:4mm 0 6mm}th,td{border:1px solid #c3cdd3;padding:2.4mm;text-align:left;vertical-align:top}th{background:#ecf6f8;color:#0b4454}tr{break-inside:avoid}
+pre{font:8.5pt/1.4 Consolas,monospace;background:#f7f9fa;padding:3mm;white-space:pre-wrap;overflow-wrap:anywhere}code{font-family:Consolas,monospace}
+.chapter{break-before:page}.eyebrow{font-size:10pt;letter-spacing:.08em;text-transform:uppercase;color:#8a5410}.meta{border-top:2px solid #0e566a;padding-top:6mm;margin-top:14mm}.note{font-size:9.3pt;color:#46585f}.refs{font-size:9pt;overflow-wrap:anywhere}.keep{break-inside:avoid}
+</style></head><body><article>
+<section>
+<p class="eyebrow">Pangasinan State University · School of Advanced Studies</p>
+<h1>The Pangasinan Heritage<br>Digital Showcase</h1>
+<h2>Framework Selection Report</h2>
+<p>Activity 1.1 · Deliverable 1.1</p>
+<div class="meta">
+<p><strong>Program:</strong> Master in Information Technology (MIT)<br>
+<strong>Course:</strong> MITS02a — Advanced Web and Mobile Development<br>
+<strong>Academic period:</strong> 2nd Semester, AY 2025–2026<br>
+<strong>Instructor:</strong> Prof. ARNI-RIE FELIX TAMAYO<br>
+<strong>Student:</strong> Julius Cesar O. Mamaril<br>
+<strong>Date:</strong> November 17, 2026</p></div>
+</div>
+<h3>Decision in one paragraph</h3>
+<p>I recommend <strong>Vue with Nuxt 3 in pre-rendered static-site mode</strong> for this information-oriented heritage showcase. Both permitted options can deliver static HTML, but the weighted project assessment narrowly favours Nuxt (84/100 versus 81/100). A measured historical runtime proxy favours Vue; it does not establish a whole-application performance advantage. The recommendation is conditional on the same-fixture production-build test described below. <a href="#r1">[1]</a> <a href="#r2">[2]</a></p>
+<p class="note">Scope: this report and the companion Atomic Design library answer the two deliverables in the uploaded two-page “2026 Activity 1.pdf.” The attachment does not include separate final-exam questions. This is an assisted reference submission for the student to review, personalize, and explain; it is not proof of an approved grade, a GitHub upload, or a deployed Nuxt application.</p>
+</section>
+<section class="chapter"><h2>1. Problem definition and architecture</h2>
+<p>The brief positions the learner as an architect for a provincial tourism initiative. The platform must present Hundred Islands, Cape Bolinao Lighthouse, and Balungao Hot Springs in a resilient, mobile-first, accessible way. The “60%+ mobile” figure is a scenario assumption supplied by the instructor, not a statistic independently established in this report.</p>
+<p>My MIT perspective is that the framework is only one part of the solution. A small download is valuable, but maintainability, content governance, accessibility, and deployability must be designed together. “Instant” loading cannot be guaranteed on every 3G connection.</p>
+<h3>Proposed JAMstack content flow</h3>
+<p>Versioned JSON/Markdown content → validated build input → Nuxt pre-rendering → static HTML/CSS/JS and pre-sized image files → GitHub Pages → visitor browser. Nuxt supports pre-rendering for static hosts; GitHub Pages serves static repository assets. <a href="#r1">[1]</a> <a href="#r3">[3]</a></p>
+<p>Store title, slug, municipality, summary, image alt text, source URL and last-reviewed date independently from components. A tourism editor changes content through a pull request; the reviewed merge triggers a rebuild. The browser does not need CMS credentials or a CMS request before the page becomes readable. A headless CMS could later replace the file source, but that service and any fees are outside the current zero-cost static-hosting proposal.</p>
+<table><thead><tr><th>Brief requirement</th><th>Design response</th><th>Acceptance evidence required</th></tr></thead><tbody>
+<tr><td>Lightning fast on 3G/4G</td><td>Pre-render useful HTML, system fonts, resized images, little client state.</td><td>Cold-load network trace and a throttled production audit; not yet measured.</td></tr>
+<tr><td>Mobile-first</td><td>Single-column default; parent-width layout changes; large touch controls.</td><td>320px reflow, keyboard and zoom tests on the integrated pages.</td></tr>
+<tr><td>Maintainable and decoupled</td><td>Separate content, tokens, components and page composition.</td><td>Add a site by editing data, without altering card HTML/CSS.</td></tr>
+<tr><td>WCAG 2.1 AA</td><td>Semantic landmarks, labels, alt text, contrast, focus and status announcements.</td><td>Automated scan plus manual keyboard/screen-reader audit of complete pages. <a href="#r4">[4]</a></td></tr>
+<tr><td>Zero-cost hosting</td><td>Static output on a public GitHub repository's Pages service.</td><td>Successful Pages deployment, subject to GitHub plan/usage limits.</td></tr>
+</tbody></table>
+<p class="note">The supplied library implements the component layer in framework-neutral HTML/CSS. It is intentionally not misrepresented as a finished Nuxt application.</p>
+</section>
+<section class="chapter"><h2>2. Quantitative comparison</h2>
+<h3>2.1 Measured transfer-size proxy</h3>
+<p>I downloaded three explicitly versioned production library files and measured their raw and deterministic gzip-9 sizes on 4 November 2026. React 18.3.1 and Vue 3.4.0 are fixed comparison fixtures, not recommendations to deploy historical dependency versions. Sources are the exact public distribution files. <a href="#r5">[5]</a> <a href="#r6">[6]</a> <a href="#r7">[7]</a></p>
+<table><thead><tr><th>Fixture</th><th>Raw bytes</th><th>gzip -n -9 bytes</th></tr></thead><tbody>
+<tr><td>React 18.3.1 production UMD <a href="#r5">[5]</a></td><td>10,751</td><td>4,263</td></tr>
+<tr><td>ReactDOM 18.3.1 production UMD <a href="#r6">[6]</a></td><td>131,835</td><td>42,793</td></tr>
+<tr><td>React + ReactDOM (sum)</td><td>142,586</td><td>47,056 = 45.95 KiB</td></tr>
+<tr><td>Vue 3.4.0 runtime global production, without template compiler <a href="#r7">[7]</a></td><td>89,314</td><td>33,841 = 33.05 KiB</td></tr>
+<tr><td>Next.js 14 complete first-route JS</td><td>N/A</td><td>Not built or measured</td></tr>
+<tr><td>Nuxt 3 complete first-route JS</td><td>N/A</td><td>Not built or measured</td></tr>
+</tbody></table>
+<p><strong>Arithmetic:</strong> (47,056 − 33,841) / 47,056 × 100 = <strong>28.08% less compressed data</strong> for this Vue runtime fixture. At an assumed effective transfer rate of 125,000 bytes/s, the 13,215-byte difference is approximately 0.106 seconds of payload transfer, excluding latency, parsing and other assets.</p>
+<p><strong>Limitation:</strong> these are different library distribution formats and separately compressed files. Neither includes a framework router, route payload, hydration overhead, application code or images. ESM tree shaking and React Server Component boundaries can change the result. Therefore these values must not be quoted as “Nuxt is 28% faster than Next.js.” The evidence supports a provisional payload preference only.</p>
+<pre>bash report/reproduce-runtime-proxy.sh
+# Each file is downloaded from a pinned URL, then measured with:
+wc -c &lt; file.js
+gzip -n -9 -c file.js | wc -c</pre>
+<h3>2.2 Ecosystem maturity proxy</h3>
+<p>For the identical fixed npm reporting window, 27 September–26 October 2026, the registry returned <strong>254,430,318</strong> downloads for <code>next</code> and <strong>8,914,103</strong> for <code>nuxt</code>, a ratio of about <strong>28.54:1</strong>. These all-version package download counts indicate a larger distribution footprint for Next, not unique developers, application quality, or superiority of Next.js 14 specifically. CI and repeated installs affect counts. <a href="#r8">[8]</a> <a href="#r9">[9]</a></p>
+</section>
+<section class="chapter"><h2>3. Developer velocity and decision model</h2>
+<h3>3.1 Velocity: capability comparison, not fabricated hours</h3>
+<table><thead><tr><th>Work unit</th><th>Next.js 14 App Router</th><th>Nuxt 3</th></tr></thead><tbody>
+<tr><td>Export brochure-style routes</td><td><code>output: 'export'</code>; output in <code>out/</code>. <a href="#r2">[2]</a></td><td><code>nuxt generate</code>; static output in <code>.output/public/</code>. <a href="#r1">[1]</a></td></tr>
+<tr><td>Detail routes known at build time</td><td>Enumerate parameters using <code>generateStaticParams()</code>. <a href="#r2">[2]</a></td><td>Explicit pre-render route list in Nuxt configuration. <a href="#r1">[1]</a></td></tr>
+<tr><td>Reusable component UI</td><td>React components; minimize client boundaries.</td><td>Vue components; keep most page content pre-rendered.</td></tr>
+<tr><td>Images on a static-only host</td><td>Use pre-optimized files or a custom loader; default optimization server is unsupported. <a href="#r2">[2]</a></td><td>Use pre-optimized files; do not depend on an image server on Pages.</td></tr>
+<tr><td>Measured developer task time</td><td>N/A — no timed implementation study.</td><td>N/A — no timed implementation study.</td></tr>
+</tbody></table>
+<p>Assumption: the project starts without a demonstrated React- or Vue-specialist team. I give both the same velocity score rather than inventing an hours-saved claim. A familiar team may develop faster with its existing framework regardless of the general comparison.</p>
+<h3>3.2 Weighted scoring</h3>
+<p>Weights and ratings below are <strong>author-assigned project judgements</strong>, not benchmark outputs. Scale: 1 = poor fit, 3 = adequate fit, 5 = strong fit. Weighted percentage = Σ(weight × score / 5). Payload gets the largest weight because the scenario emphasizes limited mobile data. Both options remain acceptable.</p>
+<table><thead><tr><th>Criterion</th><th>Weight</th><th>Next score</th><th>Next points</th><th>Nuxt score</th><th>Nuxt points</th></tr></thead><tbody>
+<tr><td>Payload potential (provisional proxy)</td><td>35%</td><td>3</td><td>21</td><td>4</td><td>28</td></tr>
+<tr><td>Developer velocity (untimed)</td><td>25%</td><td>4</td><td>20</td><td>4</td><td>20</td></tr>
+<tr><td>Ecosystem footprint</td><td>20%</td><td>5</td><td>20</td><td>4</td><td>16</td></tr>
+<tr><td>Static-hosting fit</td><td>20%</td><td>5</td><td>20</td><td>5</td><td>20</td></tr>
+<tr><th>Total</th><th>100%</th><th></th><th>81/100</th><th></th><th>84/100</th></tr>
+</tbody></table>
+<p><strong>Sensitivity:</strong> the margin is only three points. If equivalent production builds justify equal payload scores of 4, Next becomes 88/100 while Nuxt remains 84/100. This would reverse the decision. A confirmed React-experienced team could also favour Next. The report therefore selects Nuxt for this brief while making the uncertainty explicit.</p>
+</section>
+<section class="chapter"><h2>4. Deployment, performance and risk controls</h2>
+<h3>4.1 GitHub Pages deployment plan</h3>
+<p>For the proposed Nuxt application, keep server rendering enabled during generation and pre-render every destination. For a project repository named <code>pangasinan-heritage</code>, set the base path to <code>/pangasinan-heritage/</code>. For a user-site root, use <code>/</code>. Upload only <code>.output/public/</code> to Pages; do not upload a Node server output. <a href="#r1">[1]</a> <a href="#r3">[3]</a></p>
+<pre>// Nuxt 3 integration example
+export default defineNuxtConfig({
+  ssr: true,
+  app: { baseURL: process.env.NUXT_APP_BASE_URL || '/' },
+  nitro: { prerender: { routes: [
+    '/', '/sites/hundred-islands',
+    '/sites/cape-bolinao', '/sites/balungao'
+  ] } }
+})
+# After creating a real Nuxt project and locking dependencies:
+NUXT_APP_BASE_URL=/pangasinan-heritage/ npm run generate</pre>
+<p>The included <code>.github/workflows/pages.yml</code> instead publishes the supplied <em>component library</em> from <code>template/</code>. This is a working static-library handoff, not a claim that Nuxt was built. The student must upload the repository, enable Pages under “GitHub Actions,” and verify the actual deployment.</p>
+<h3>4.2 Proposed performance budgets</h3>
+<table><thead><tr><th>Metric</th><th>Project target</th><th>Current status</th></tr></thead><tbody>
+<tr><td>Initial route JavaScript, gzip</td><td>≤100 KiB</td><td>Target only; full app not measured.</td></tr>
+<tr><td>HTML + CSS, gzip</td><td>≤35 KiB</td><td>Target only.</td></tr>
+<tr><td>Largest initially visible photo</td><td>≤100 KiB, appropriate dimensions</td><td>Production derivatives still required; preview photos are not optimized.</td></tr>
+<tr><td>Initial page transfer</td><td>≤300 KiB</td><td>Target only.</td></tr>
+<tr><td>3G lab loading</td><td>Readable HTML within 3s; LCP ≤4s under a declared test profile</td><td>Not measured; record rate, RTT, CPU and cache state.</td></tr>
+<tr><td>Layout stability</td><td>CLS ≤0.10</td><td>Reserve image space; integrated audit pending.</td></tr>
+</tbody></table>
+<p>These are local engineering budgets, not guaranteed user experience or a claimed industry certification. At 1 Mbps, 300 KiB alone takes about 2.46 seconds to transfer before latency; this shows why indiscriminate image downloads can dominate the framework choice.</p>
+<h3>4.3 Risks and mitigations</h3>
+<ul>
+<li><strong>Historical major versions:</strong> the instructor specifies Next 14/Nuxt 3. Before a public release, verify support and advisories, choose patched dependencies, and obtain instructor approval if a major-version change is necessary.</li>
+<li><strong>No server on Pages:</strong> do not put secrets, bookings, private records, authentication endpoints or runtime CMS credentials in static files.</li>
+<li><strong>Stale tourism facts:</strong> use source URLs and review dates; confirm fees, hours, advisories and accessibility facilities with local authorities.</li>
+<li><strong>Accessibility:</strong> component contrast and keyboard tests support the goal, but a framework or automated score alone cannot establish WCAG 2.1 AA conformance. <a href="#r4">[4]</a></li>
+<li><strong>Images:</strong> current examples use third-party photographs for educational preview. Clear usage rights and produce responsive derivatives before public tourism publication.</li>
+</ul>
+</section>
+<section class="chapter"><h2>5. Verification protocol and conclusion</h2>
+<h3>Fair full-framework benchmark to run before release</h3>
+<ol>
+<li>Pin exact Next.js 14, React, Nuxt 3, Vue and Node versions. Record lockfiles, OS and hardware. Use the same text, three sites, image derivatives, routes and interaction features.</li>
+<li>Build production static outputs with <code>next build</code> (<code>output:'export'</code>) and <code>nuxt generate</code>. Serve those outputs over the same host. <a href="#r2">[2]</a> <a href="#r1">[1]</a></li>
+<li>Record cold first-route transfer from a HAR: HTML, CSS, loaded JS, route payload and images separately. Do not sum every file in an output directory as the initial download.</li>
+<li>Use the same fixed mobile viewport, throttling profile and cache settings. Run five cold loads per candidate; compare median LCP, total bytes, request count and layout shift. Keep raw reports.</li>
+<li>Run a timed developer pilot: add one destination and one accessible card variant in each stack; record actual minutes, defects and review effort. No such times are claimed in this report.</li>
+<li>Run automated accessibility checks and manual keyboard, focus, zoom, reflow and screen-reader tests. Update the decision matrix if evidence changes the ranking.</li>
+</ol>
+<h3>Conclusion</h3>
+<p>Nuxt 3 is my selected framework for this static, content-first tourism scenario. Its recommendation is a reasoned architectural judgement with quantitative support and explicitly bounded evidence, not a universal ranking. The strongest design choices are pre-rendered content, limited JavaScript, optimized imagery, reusable components and a verifiable accessibility process. The companion manual turns those principles into a ten-component library that another developer can inspect and extend.</p>
+<h3>Submission mapping</h3>
+<p><code>report/framework-selection-report.pdf</code> fulfils Deliverable 1.1. <code>docs/atomic-design-system-manual.pdf</code> and the live HTML/CSS under <code>template/</code> fulfil Deliverable 1.2. The repository README explains upload and Pages setup. No GitHub account connection or course submission has been performed.</p>
+<h2>References</h2>
+<ol class="refs">
+<li id="r1"><a href="https://nuxt.com/docs/3.x/getting-started/deployment">Nuxt 3 documentation — Deployment and static hosting.</a> Accessed 6 November 2026.</li>
+<li id="r2"><a href="https://nextjs.org/docs/14/app/building-your-application/deploying/static-exports">Next.js 14 documentation — Static Exports.</a> Accessed 6 November 2026.</li>
+<li id="r3"><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages">GitHub Docs — About GitHub Pages.</a> Accessed 6 November 2026.</li>
+<li id="r4"><a href="https://www.w3.org/WAI/WCAG21/quickref/">W3C — How to Meet WCAG 2.1.</a> Select version 2.1 in the reference filter. Accessed 6 November 2026.</li>
+<li id="r5"><a href="https://unpkg.com/react@18.3.1/umd/react.production.min.js">React 18.3.1 production UMD distribution.</a> Measured 4 November 2026.</li>
+<li id="r6"><a href="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js">ReactDOM 18.3.1 production UMD distribution.</a> Measured 4 November 2026.</li>
+<li id="r7"><a href="https://unpkg.com/vue@3.4.0/dist/vue.runtime.global.prod.js">Vue 3.4.0 production runtime global distribution.</a> Measured 4 November 2026.</li>
+<li id="r8"><a href="https://api.npmjs.org/downloads/point/2026-09-27:2026-10-26/next">npm Downloads API — next, fixed reporting window.</a> Retrieved 4 November 2026.</li>
+<li id="r9"><a href="https://api.npmjs.org/downloads/point/2026-09-27:2026-10-26/nuxt">npm Downloads API — nuxt, fixed reporting window.</a> Retrieved 4 November 2026.</li>
+</ol>
+<p class="note">Primary assignment source: “2026 Activity 1.pdf,” Pangasinan State University School of Advanced Studies, two pages supplied by the student. Student identification remains intentionally blank.</p>
+</section>
+</article></body></html>

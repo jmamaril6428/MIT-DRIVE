@@ -1,0 +1,47 @@
+/* Harness stylesheet for the component preview pages.
+   NOT part of the shipped library - it only frames each component at a fixed
+   container width so the responsive behaviour can be screenshotted. */
+
+body.preview-page {
+  background: var(--slate-100);
+  padding: var(--space-6);
+  font-family: var(--font-body);
+}
+
+.preview-head { max-width: 1100px; margin: 0 auto var(--space-5); }
+.preview-kicker { font-size: var(--fs-caption); font-weight: 700;
+                  letter-spacing: var(--ls-wide); text-transform: uppercase;
+                  color: var(--color-accent); margin: 0 0 var(--space-1); }
+.preview-title { font-family: var(--font-display); font-size: 1.6rem;
+                 color: var(--color-text-strong); margin: 0 0 var(--space-1); }
+.preview-note { font-size: var(--fs-small); color: var(--color-text-muted); margin: 0; }
+
+.preview-stack { display: flex; flex-direction: column; gap: var(--space-6);
+                 max-width: 1100px; margin: 0 auto; }
+
+.preview-row { display: flex; flex-direction: column; gap: var(--space-2); }
+.preview-row__label {
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600;
+  color: var(--sea-700); background: var(--sea-50);
+  border: 1px solid var(--sea-100); border-radius: var(--radius-pill);
+  padding: 0.15rem var(--space-3); align-self: flex-start;
+}
+
+/* A fixed-width "container" to place the component inside. It also declares
+   the `action-bar` name so the Button atom's narrow-container rule can fire. */
+.stage {
+  width: var(--stage-w, 100%);
+  container-type: inline-size;
+  container-name: action-bar stage;
+  background: var(--white);
+  border: 1px dashed var(--slate-400);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+.stage--plain { background: transparent; border-style: solid; border-color: var(--slate-200); }
+
+.stage-grid { display: grid; gap: var(--space-3); }
+.spec-row { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+.spec-col { display: flex; flex-direction: column; gap: var(--space-3); }
+.mini-head { font-size: var(--fs-caption); font-weight: 600; color: var(--color-text-muted);
+             text-transform: uppercase; letter-spacing: var(--ls-wide); margin: 0 0 var(--space-2); }

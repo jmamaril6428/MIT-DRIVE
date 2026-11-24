@@ -1,0 +1,7 @@
+item,version,raw_bytes,gzip9_n_bytes,scope
+React,18.3.1,10751,4263,UMD production library proxy only
+ReactDOM,18.3.1,131835,42793,UMD production library proxy only
+React plus ReactDOM,18.3.1,142586,47056,sum of separately compressed files
+Vue runtime,3.4.0,89314,33841,global production runtime only without compiler
+Next.js 14 full application,N/A,N/A,N/A,not built or measured
+Nuxt 3 full application,N/A,N/A,N/A,not built or measured

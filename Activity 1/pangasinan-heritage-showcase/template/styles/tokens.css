@@ -1,0 +1,183 @@
+/* ==========================================================================
+   Pangasinan Heritage Design System - Design Tokens
+   Layer 0 of the Atomic Design library.
+   Every literal value (colour, size, radius, shadow, duration) lives here so
+   that no component ever hard-codes a raw value.
+   Accessibility: every text/background pair below is verified against
+   WCAG 2.1 AA (>= 4.5:1 for body text, >= 3:1 for large text and UI edges).
+   ========================================================================== */
+
+:root {
+  /* ---------------------------------------------------------------------
+     1. COLOUR PRIMITIVES
+     --------------------------------------------------------------------- */
+
+  /* "Hundred Islands" sea ramp - the primary brand ramp */
+  --sea-50:  #ECF6F8;
+  --sea-100: #D2E9EE;
+  --sea-200: #A9D3DC;
+  --sea-300: #7FB8C4;
+  --sea-400: #3E8C9E;
+  --sea-500: #12697F;
+  --sea-600: #0E566A;
+  --sea-700: #0B4454;
+  --sea-900: #062530;
+
+  /* "Heritage gold" ramp - the accent, inspired by colonial church ornament */
+  --gold-50:  #FBF3E4;
+  --gold-100: #F6E7CE;
+  --gold-300: #E0A44A;
+  --gold-500: #C8862B;
+  --gold-600: #A96A16;
+  --gold-700: #8A5410;
+  --gold-800: #6B400C;
+
+  /* Warm neutral (slate) ramp - the workhorse for surfaces and text */
+  --white:     #FFFFFF;
+  --slate-50:  #F7F9FA;
+  --slate-100: #EDF1F3;
+  --slate-200: #DCE3E7;
+  --slate-300: #C3CDD3;
+  --slate-400: #9AA7AD;
+  --slate-500: #6B7A82;
+  --slate-600: #46585F;
+  --slate-700: #3C484E;
+  --slate-900: #0B1B22;
+
+  /* Feedback ramps (each >= 4.5:1 on white) */
+  --green-600: #157F3D;
+  --amber-700: #8A5410;
+  --red-600:   #B3261E;
+
+  /* ---------------------------------------------------------------------
+     2. SEMANTIC COLOUR TOKENS  (components reference THESE, never the ramps)
+     --------------------------------------------------------------------- */
+  --color-bg:              var(--white);
+  --color-surface:         var(--slate-50);
+  --color-surface-raised:  var(--slate-100);
+  --color-surface-inverse: var(--sea-900);
+
+  --color-text:            var(--slate-700);   /* dark body copy on white */
+  --color-text-strong:     var(--slate-900);   /* 17.6:1 on white */
+  --color-text-muted:      var(--slate-600);   /*  7.4:1 on white */
+  --color-text-inverse:    var(--white);
+  --color-text-link:       var(--sea-600);     /*  8.2:1 on white */
+
+  --color-primary:         var(--sea-600);     /* white text = 8.2:1 */
+  --color-primary-hover:   var(--sea-700);
+  --color-primary-active:  var(--sea-900);
+  --color-primary-subtle:  var(--sea-50);
+  --color-on-primary:      var(--white);
+
+  --color-accent:          var(--gold-700);    /* white text = 6.3:1 */
+  --color-accent-hover:    var(--gold-800);
+  --color-accent-subtle:   var(--gold-50);
+  --color-on-accent:       var(--white);
+
+  --color-success:         var(--green-600);
+  --color-warning:         var(--amber-700);
+  --color-danger:          var(--red-600);
+  --color-danger-subtle:   #FBEDEC;
+  --color-info:            var(--sea-600);
+
+  /* Border tokens: subtle/default are decorative; `strong` is used for any
+     interactive edge (inputs, toggles) and clears the 3:1 UI threshold. */
+  --color-border-subtle:   var(--slate-200);
+  --color-border:          var(--slate-300);
+  --color-border-strong:   var(--slate-500);
+
+  --color-focus:           #1D6FD8;            /* 4.9:1 on white */
+
+  /* ---------------------------------------------------------------------
+     3. TYPOGRAPHY
+     --------------------------------------------------------------------- */
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino,
+                  "Book Antiqua", Georgia, "Times New Roman", serif;
+  --font-body:    system-ui, -apple-system, "Segoe UI", Roboto,
+                  "Helvetica Neue", Arial, sans-serif;
+  --font-mono:    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+                  "Liberation Mono", monospace;
+
+  /* Fluid type scale: every step is a clamp() so components adapt without
+     JavaScript and without media queries. */
+  --fs-display: clamp(2.25rem, 1.55rem + 2.8vw, 3.5rem);
+  --fs-h1:      clamp(1.9rem,  1.5rem  + 1.6vw, 2.75rem);
+  --fs-h2:      clamp(1.5rem,  1.32rem + 0.9vw, 2rem);
+  --fs-h3:      clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --fs-h4:      1.125rem;
+  --fs-body-lg: 1.0625rem;
+  --fs-body:    1rem;
+  --fs-small:   0.875rem;
+  --fs-caption: 0.8125rem;
+
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semibold:600;
+  --fw-bold:    700;
+
+  --lh-tight:   1.15;
+  --lh-heading: 1.25;
+  --lh-body:    1.6;
+
+  --ls-tight:  -0.015em;
+  --ls-wide:    0.06em;
+
+  /* ---------------------------------------------------------------------
+     4. SPACE, RADIUS, ELEVATION, MOTION
+     --------------------------------------------------------------------- */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --radius-xl:   22px;
+  --radius-pill: 999px;
+
+  --shadow-1: 0 1px 2px rgba(11, 27, 34, 0.06),
+              0 1px 3px rgba(11, 27, 34, 0.08);
+  --shadow-2: 0 2px 4px rgba(11, 27, 34, 0.06),
+              0 6px 16px rgba(11, 27, 34, 0.10);
+  --shadow-3: 0 10px 24px rgba(11, 27, 34, 0.12),
+              0 2px 6px rgba(11, 27, 34, 0.08);
+
+  --ring-width: 3px;
+  --target-min: 44px;           /* WCAG 2.5.5 minimum touch target */
+
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 320ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ---------------------------------------------------------------------
+     5. CONTAINER-QUERY BREAKPOINTS
+     CSS custom properties cannot be used inside @container conditions, so
+     these values are reference sizes. Component-specific content thresholds
+     (26rem buttons, 28rem search, 32rem cards, 40/64rem grid, 48rem header,
+     9/16rem navigation) are explicitly catalogued in the manual.
+
+        name   token        px     typical container
+        ----   ----------   ----   ------------------------------------
+        xs     20rem        320    a phone card / narrow sidebar column
+        sm     30rem        480    a half-width column on tablet
+        md     45rem        720    a full-width article column
+        lg     60rem        960    the main desktop content region
+     --------------------------------------------------------------------- */
+  --cq-xs: 20rem;
+  --cq-sm: 30rem;
+  --cq-md: 45rem;
+  --cq-lg: 60rem;
+
+  /* Layout */
+  --content-max: 72rem;
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 3rem);
+  --grid-gap: clamp(0.75rem, 0.4rem + 1.5vw, 1.5rem);
+}

@@ -1,0 +1,400 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Atomic Design System Manual — Pangasinan Heritage</title>
+<style>
+@page{size:A4;margin:16mm 17mm}
+*{box-sizing:border-box}body{margin:0;font:10pt/1.48 Arial,Helvetica,sans-serif;color:#23353e}
+article{max-width:176mm;margin:auto}h1,h2,h3{color:#0b4454;line-height:1.2}
+h1{font:700 29pt/1.14 Georgia,serif;margin:20mm 0 8mm}h2{font:700 19pt/1.2 Georgia,serif;margin:0 0 4mm}h3{font-size:11pt;margin:4mm 0 2mm}
+p{margin:0 0 3mm}li{margin:1.5mm 0}.chapter{break-before:page}
+.eyebrow{font-size:9pt;text-transform:uppercase;letter-spacing:.07em;color:#8a5410}
+.meta{border-top:2px solid #0e566a;margin-top:10mm;padding-top:5mm}.note,figcaption{font-size:8.5pt;color:#46585f}
+figure{margin:2mm 0 4mm}figure img{max-width:100%;height:auto;max-height:58mm;object-fit:contain;object-position:left center;border:1px solid #dce3e7}
+pre{font:8pt/1.35 Consolas,monospace;background:#f7f9fa;padding:2.5mm;white-space:pre-wrap;overflow-wrap:anywhere;margin:2mm 0 3mm}
+code{font-family:Consolas,monospace}a{color:#0e566a}table{width:100%;border-collapse:collapse;font-size:9pt;margin:3mm 0}
+td,th{border:1px solid #c3cdd3;padding:2mm;text-align:left;vertical-align:top}th{background:#ecf6f8;color:#0b4454}tr{break-inside:avoid}.refs{overflow-wrap:anywhere;font-size:9pt}
+</style></head><body><article>
+<section>
+<p class="eyebrow">Pangasinan State University · School of Advanced Studies</p>
+<h1>Atomic Design<br>System Manual</h1>
+<h2>The Pangasinan Heritage Digital Showcase</h2>
+<p>Activity 1.1 · Deliverable 1.2</p>
+<div class="meta"><p><strong>Program:</strong> Master's in Information Technology (MIT)<br>
+<strong>Course:</strong> MITS02a — Advanced Web and Mobile Development<br>
+<strong>Academic period:</strong> 2nd Semester, AY 2025–2026<br>
+<strong>Instructor:</strong> Prof. ARNI-RIE FELIX TAMAYO<br>
+<strong>Student:</strong> Julius Cesar O. Mamaril<br>
+<strong>Date:</strong> November 17, 2026</p></div>
+<h3>Purpose</h3>
+<p>This manual enables a new developer to build consistent heritage pages using the supplied tokens, HTML/CSS components and documented parent-width rules. It includes all five atoms, three molecules and two organisms named in the assignment. Each entry contains a real rendered preview, usage context, responsive behaviour and a reusable HTML/CSS extract.</p>
+<p>Full code lives in <code>template/</code>; full-resolution PNGs live in <code>docs/previews/</code>. The PDF scales previews to fit the page. Open <code>template/index.html</code> after extracting the ZIP for interactive examples.</p>
+<p class="note">Scope and honesty: this is an educational component library, not a finished Nuxt application or a WCAG conformance certificate. The student should review, personalize and understand it before submission. No student identity, test score, visitor rating or institutional endorsement has been invented.</p>
+</section>
+<section class="chapter"><h2>1. System foundations</h2>
+<h3>1.1 Atomic Design as a mental model</h3>
+<p>Brad Frost's model describes atoms, molecules, organisms, templates and pages. This library implements the first three levels required by the brief; the final section shows page composition. It is a reusable hierarchy, not a requirement to build in a rigid linear order. <a href="#s1">[1]</a></p>
+<table><thead><tr><th>Level</th><th>Components in this library</th><th>Responsibility</th></tr></thead><tbody>
+<tr><td>Atoms</td><td>Button; Typography; Colour Tokens; Icon; Image</td><td>Foundational appearance and single controls.</td></tr>
+<tr><td>Molecules</td><td>Heritage Card; Search Form; Navigation Item</td><td>A small, purposeful grouping of atoms.</td></tr>
+<tr><td>Organisms</td><td>Heritage Grid; Header Navigation</td><td>A complete page region assembled from smaller parts.</td></tr>
+</tbody></table>
+<h3>1.2 Install by composition</h3>
+<pre>&lt;link rel="stylesheet" href="styles/tokens.css"&gt;
+&lt;link rel="stylesheet" href="styles/base.css"&gt;
+&lt;link rel="stylesheet" href="styles/components.css"&gt;
+&lt;script src="demo.js" defer&gt;&lt;/script&gt;</pre>
+<p>Use this order: tokens define values; base defines document defaults and utilities; components define reusable classes. <code>previews/preview.css</code> frames test cases only and is not a production dependency. <code>demo.js</code> supplies the demonstration search, adjustable grid and menu disclosure.</p>
+<h3>1.3 Design decisions</h3>
+<p>Sea teal expresses the coastal context; heritage gold provides emphasis. A serif display stack adds editorial character, while a system sans-serif stack keeps body text familiar and avoids remote font downloads. Colour ramps are primitives; product components normally use semantic aliases such as <code>--color-primary</code>. A few internal demonstration styles use ramp values directly.</p>
+<p>Use 4px-based spacing, 6–22px corner radii and modest shadows. Typography uses fluid <code>clamp()</code> values; the fluid part uses viewport units. Explicit parent-width heading changes still apply inside <code>.type-prose</code>. Do not confuse viewport-fluid type with a container query.</p>
+<h3>1.4 Correct container-query ownership</h3>
+<p>A size query styles a descendant according to an ancestor's size. A component cannot query its own width and use that same query to restyle itself. Therefore <code>.card-container</code>, <code>.search-container</code>, <code>.grid-container</code> and <code>.header-container</code> are real wrappers; do not remove them. <a href="#s2">[2]</a></p>
+<pre>.card-container { container: card / inline-size; }
+/* Query the wrapper; change its descendant. */
+@container card (min-width:32rem) {
+  .heritage-card { display:grid; }
+}</pre>
+<p>All rem-to-pixel examples assume the default 16px root size. Keep rem units in source so thresholds adapt with user settings. Browsers without container queries retain the stacked baseline; no JavaScript layout polyfill is required by this library.</p>
+</section>
+<section class="chapter"><h2>2. Responsive and accessible contracts</h2>
+<table><thead><tr><th>Component / query context</th><th>Exact boundary</th><th>Result</th></tr></thead><tbody>
+<tr><td>Button / action-bar</td><td>≤26rem (416px)</td><td>Full width unless <code>.btn--inline</code>.</td></tr>
+<tr><td>Typography / prose</td><td>≤20rem (320px); ≥45rem (720px)</td><td>Heading step-down; then paragraph measure cap.</td></tr>
+<tr><td>Colour swatches / swatches</td><td>≥30rem (480px); ≥45rem</td><td>2 → 4 → 6 columns.</td></tr>
+<tr><td>Icon / nearest size container</td><td>≥45rem</td><td>Adaptive icon grows to 1.375rem.</td></tr>
+<tr><td>Image / media</td><td>≤20rem; ≥45rem</td><td>4:3 → default 16:9 → 21:9 crop.</td></tr>
+<tr><td>Heritage Card / card</td><td>≤20rem; ≥32rem (512px)</td><td>Compact → default stacked → horizontal.</td></tr>
+<tr><td>Search Form / search</td><td>≥28rem (448px)</td><td>Stacked → inline controls.</td></tr>
+<tr><td>Navigation Item / nav-item</td><td>≤9rem (144px); ≥16rem (256px)</td><td>Icon-only → label → helper.</td></tr>
+<tr><td>Heritage Grid / heritage-grid</td><td>≥40rem (640px); ≥64rem (1024px)</td><td>1 → 2 → 3 columns.</td></tr>
+<tr><td>Header / site-header</td><td>≥48rem (768px); ≥60rem (960px)</td><td>Disclosure → inline nav → search shortcut.</td></tr>
+</tbody></table>
+<p>Only motion preferences use a media query. The sizes above are component content thresholds, not phone/tablet device classifications. CSS variables cannot directly replace numeric conditions in these size-query rules; maintain the documented values and tests together.</p>
+<h3>Accessibility rules</h3>
+<p>Target WCAG 2.1 AA: preserve labels, useful image alternatives, keyboard operation, visible focus, logical headings, status messages and meaningful link text. Body text needs 4.5:1 contrast; qualifying large text and essential non-text controls need 3:1. Decorative card boundaries need not serve as interactive control boundaries. <a href="#s3">[3]</a></p>
+<table><thead><tr><th>Verified pair</th><th>Calculated ratio</th></tr></thead><tbody>
+<tr><td>White / primary #0E566A</td><td>8.21:1</td></tr>
+<tr><td>White / accent #8A5410</td><td>6.26:1</td></tr>
+<tr><td>Muted text #46585F / white</td><td>7.44:1</td></tr>
+<tr><td>Danger #B3261E / white</td><td>6.54:1</td></tr>
+<tr><td>Focus blue #1D6FD8 / white</td><td>4.86:1</td></tr>
+</tbody></table>
+<p class="note">Ratios calculated from sRGB relative luminance using (Llighter + 0.05)/(Ldarker + 0.05), rounded to two decimals. These pairs do not certify every state or image-overlay combination. The 44px control target is a project enhancement aligned with WCAG 2.1 criterion 2.5.5 (AAA), not an AA requirement. Reduced-motion behaviour is also an enhancement.</p>
+</section>
+<section class="chapter"><p class="eyebrow">Atom 01</p><h2>Button</h2>
+<figure><img src="https://us-tiangong-data.oss-accelerate.aliyuncs.com/skycode/video/2026-11-04/2117835489693315072.png" alt="Rendered button variants in narrow and wide containers"><figcaption>Visual preview: stacked actions, colour variants, sizes and disabled state.</figcaption></figure>
+<p><strong>Usage:</strong> use a real <code>button</code> for an action and a link styled as a button for navigation. Primary identifies the main action; secondary supports it; danger is reserved for destructive actions. Preview “book” labels illustrate styling only; no booking service is implemented.</p>
+<p><strong>Responsive logic:</strong> parent named <code>action-bar</code>, ≤26rem: all non-inline buttons expand to full width. Above 26rem they hug their label. The parent must use a stacked layout when full-width actions are expected. Minimum height is 44px, including the small variant.</p>
+<pre>&lt;div class="actions"&gt;
+  &lt;button class="btn btn--primary" type="button"&gt;
+    Explore destinations
+  &lt;/button&gt;
+  &lt;a class="btn btn--secondary" href="sites.html"&gt;Browse sites&lt;/a&gt;
+&lt;/div&gt;
+
+.actions { container: action-bar / inline-size;
+  display:flex; flex-wrap:wrap; gap:.75rem; }
+.btn { display:inline-flex; min-height:44px;
+  align-items:center; justify-content:center; }
+@container action-bar (max-width:26rem) {
+  .btn:not(.btn--inline) { width:100%; }
+}</pre>
+<p><strong>States:</strong> hover, active, focus-visible and native disabled. Use <code>disabled</code> on unavailable buttons. <code>aria-disabled</code> alone does not stop a link activating; remove its navigation and implement disabled behaviour if that pattern is needed. Do not hide essential information in hover states.</p>
+<p class="note">Full source: <code>styles/components.css</code>, “ATOM 2”; live example: <code>previews/atom-button.html</code>.</p>
+</section>
+<section class="chapter"><p class="eyebrow">Atom 02</p><h2>Typography</h2>
+<figure><img src="https://us-tiangong-data.oss-accelerate.aliyuncs.com/skycode/video/2026-11-04/2117835489697382400.png" alt="Typography scale and narrow prose example"><figcaption>Visual preview: display, headings, body, metadata and caption styles.</figcaption></figure>
+<p><strong>Usage:</strong> style actual headings with <code>.type-h1</code> through <code>.type-h4</code>; use body styles for descriptions and captions for attribution. Pick semantic heading levels according to document structure, not desired visual size. One main heading per page is the library convention.</p>
+<p><strong>Responsive logic:</strong> inside <code>prose</code>, ≤20rem changes h1 styling to the h2 token and h2 styling to the h3 token. At ≥45rem, paragraphs cap at 68ch. The shared type tokens also use viewport-fluid <code>clamp()</code>. No text is removed at a narrow width.</p>
+<pre>&lt;section class="type-prose"&gt;
+  &lt;p class="type-eyebrow"&gt;Alaminos City&lt;/p&gt;
+  &lt;h1 class="type-h1"&gt;Hundred Islands&lt;/h1&gt;
+  &lt;p class="type-body"&gt;Plan a responsible coastal visit.&lt;/p&gt;
+&lt;/section&gt;
+
+.type-prose { container:prose / inline-size; }
+.type-h1 { font-size:var(--fs-h1); }
+@container prose (max-width:20rem) {
+  .type-h1 { font-size:var(--fs-h2); }
+  .type-h2 { font-size:var(--fs-h3); }
+}
+@container prose (min-width:45rem) {
+  p { max-width:68ch; }
+}</pre>
+<p><strong>Accessibility:</strong> body copy is 1rem with 1.6 line height. Do not enforce fixed-height text containers. Retest at 200% zoom and with text-spacing overrides. The system-font fallback is deliberate: no font download is needed before visitors can read the page.</p>
+<p class="note">Full source: <code>styles/tokens.css</code>, typography tokens; <code>styles/components.css</code>, “ATOM 1”; live: <code>previews/atom-typography.html</code>.</p>
+</section>
+<section class="chapter"><p class="eyebrow">Atom 03</p><h2>Colour Tokens</h2>
+<figure><img src="https://us-tiangong-data.oss-accelerate.aliyuncs.com/skycode/video/2026-11-04/2117835489850245120.png" alt="Semantic and primitive colour swatches"><figcaption>Visual preview: semantic colours and supporting ramps.</figcaption></figure>
+<p><strong>Usage:</strong> tokens provide the shared colour vocabulary. Use <code>--color-primary</code> for primary controls, <code>--color-accent</code> for emphasis and <code>--color-text-muted</code> for secondary copy. Change the token layer to change the brand consistently; do not scatter new hex values through pages.</p>
+<p><strong>Responsive logic:</strong> the colour values themselves do not change with size. The documentation swatch component queries <code>swatches</code>: fewer than 30rem gives two columns; ≥30rem gives four; ≥45rem gives six. This distinction prevents an artificial “responsive colour” claim.</p>
+<pre>&lt;div class="swatch-group"&gt;&lt;div class="swatch-grid"&gt;
+  &lt;div class="swatch"&gt;
+    &lt;div class="swatch__chip" style="background:var(--color-primary)"&gt;&lt;/div&gt;
+    &lt;div class="swatch__meta"&gt;
+      &lt;span class="swatch__name"&gt;Primary&lt;/span&gt;
+      &lt;span class="swatch__value"&gt;#0E566A&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;
+.swatch-group { container:swatches / inline-size; }
+.swatch-grid { display:grid; grid-template-columns:repeat(2,1fr); }
+@container swatches (min-width:30rem) {
+  .swatch-grid { grid-template-columns:repeat(4,1fr); }
+}
+@container swatches (min-width:45rem) {
+  .swatch-grid { grid-template-columns:repeat(6,1fr); }
+}</pre>
+<p><strong>Accessibility:</strong> never communicate selected state, errors or category meaning through colour alone. Use text and shape too. The light slate card border is decorative; inputs use a darker control border. Recalculate contrast whenever foreground or background aliases change.</p>
+<p class="note">Full source: <code>styles/tokens.css</code> and “ATOM 5” in <code>components.css</code>; live: <code>previews/atom-color-tokens.html</code>.</p>
+</section>
+<section class="chapter"><p class="eyebrow">Atom 04</p><h2>Icon</h2>
+<figure><img src="https://us-tiangong-data.oss-accelerate.aliyuncs.com/skycode/video/2026-11-04/2117835489686667264.png" alt="SVG icon sizes and icon set"><figcaption>Visual preview: stroke icons inherit their parent's text colour.</figcaption></figure>
+<p><strong>Usage:</strong> use an icon to reinforce an existing text label, such as a map pin beside a municipality. The included simple SVG path drawings are local UI code, not an external icon-font dependency. Do not replace an unfamiliar concept with an unexplained icon.</p>
+<p><strong>Responsive logic:</strong> fixed variants are 0.875rem, 1rem, 1.25rem and 1.75rem. <code>.icon--adaptive</code> changes from the 1rem default to 1.375rem when the nearest size container is ≥45rem. Below that, no special breakpoint applies.</p>
+<pre>&lt;span&gt;
+  &lt;svg class="icon icon--adaptive" viewBox="0 0 24 24"
+       aria-hidden="true" focusable="false"&gt;
+    &lt;path d="M12 21s-7-5.6-7-11a7 7 0 1 1 14 0c0 5.4-7 11-7 11z"/&gt;
+    &lt;circle cx="12" cy="10" r="2.5"/&gt;
+  &lt;/svg&gt;
+  Alaminos City
+&lt;/span&gt;
+.icon { width:1rem; height:1rem; fill:none;
+  stroke:currentColor; stroke-width:1.75; }
+@container (min-width:45rem) {
+  .icon--adaptive { width:1.375rem; height:1.375rem; }
+}</pre>
+<p><strong>Accessibility:</strong> decorative SVGs use <code>aria-hidden="true"</code>. A standalone icon button needs an accessible name on the button, e.g. <code>aria-label="Open navigation"</code>. Its hit area remains at least 44px even if the drawn icon is only 20px. Essential icon contrast is tested against its actual background.</p>
+<p class="note">Full source: <code>components.css</code>, “ATOM 3”; SVG symbol examples: <code>previews/atom-icon.html</code>.</p>
+</section>
+<section class="chapter"><p class="eyebrow">Atom 05</p><h2>Image / Media</h2>
+<figure><img src="https://us-tiangong-data.oss-accelerate.aliyuncs.com/skycode/video/2026-11-04/2117835489837662208.png" alt="Images shown at narrow, normal and cinematic crops"><figcaption>Visual preview: size-dependent crops with optional captions.</figcaption></figure>
+<p><strong>Usage:</strong> wrap a site photograph and its caption in a semantic figure. Supply meaningful alt text when it communicates content, or <code>alt=""</code> when the image is truly redundant. Explicit dimensions and a reserved frame reduce layout movement.</p>
+<p><strong>Responsive logic:</strong> the figure named <code>media</code> queries its own content width to style its child frame: ≤20rem gives 4:3; above 20rem and below 45rem gives 16:9; ≥45rem gives 21:9. <code>object-fit:cover</code> crops without stretching.</p>
+<pre>&lt;figure class="media"&gt;
+  &lt;div class="media__frame"&gt;
+    &lt;img class="media__img" src="images/islands-640.webp"
+         width="640" height="400"
+         alt="Small green islands surrounded by blue sea"
+         loading="lazy" decoding="async"&gt;
+  &lt;/div&gt;
+  &lt;figcaption class="media__caption"&gt;Hundred Islands&lt;/figcaption&gt;
+&lt;/figure&gt;
+.media { container:media / inline-size; }
+.media__frame { aspect-ratio:16/9; overflow:hidden; }
+.media__img { width:100%; height:100%; object-fit:cover; }
+@container media (max-width:20rem) {
+  .media__frame { aspect-ratio:4/3; }
+}
+@container media (min-width:45rem) {
+  .media__frame { aspect-ratio:21/9; }
+}</pre>
+<p><strong>Production note:</strong> the snippet's image filename is a replacement example, not a shipped optimized asset. The live example uses actual remote photos. Before release, create permitted 320/640/960px WebP or AVIF derivatives and add <code>srcset</code>/<code>sizes</code>. Do not lazy-load the page's primary above-the-fold hero. Card media overrides this atom's crop to 3:2 stacked and 4:3 horizontal.</p>
+<p class="note">Full source: “ATOM 4”; live: <code>previews/atom-image.html</code>. Image sources are listed in section 5.</p>
+</section>
+<section class="chapter"><p class="eyebrow">Molecule 01</p><h2>Heritage Card</h2>
+<figure><img src="https://us-tiangong-data.oss-accelerate.aliyuncs.com/skycode/video/2026-11-04/2117835489777201152.png" alt="Compact, stacked and horizontal heritage cards"><figcaption>Visual preview: the same card structure in three parent widths.</figcaption></figure>
+<p><strong>Usage:</strong> display one destination preview inside a Heritage Grid or featured destination slot. Required data: site name, municipality, image and alt text, short summary and destination URL. Avoid unverified visitor ratings, prices and opening hours.</p>
+<p><strong>Responsive logic:</strong> wrapper <code>card</code>, ≤20rem hides the description and reduces title styling; the linked full detail page must retain the complete information. From &gt;20rem to &lt;32rem the card is stacked with a two-line summary. At ≥32rem it becomes horizontal with proportional 42:58 tracks after allowing for the gap.</p>
+<pre>&lt;div class="card-container"&gt;
+  &lt;article class="heritage-card"&gt;
+    &lt;figure class="media heritage-card__media"&gt;
+      &lt;div class="media__frame"&gt;&lt;img class="media__img"
+        src="images/islands.webp" alt="Hundred Islands seascape"
+        width="640" height="400"&gt;&lt;/div&gt;
+    &lt;/figure&gt;
+    &lt;div class="heritage-card__body"&gt;
+      &lt;p class="heritage-card__place"&gt;Alaminos City&lt;/p&gt;
+      &lt;h3 class="heritage-card__title"&gt;Hundred Islands&lt;/h3&gt;
+      &lt;p class="heritage-card__desc"&gt;A coastal destination.&lt;/p&gt;
+      &lt;a class="btn btn--secondary" href="sites/hundred-islands/"&gt;View Hundred Islands&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/article&gt;
+&lt;/div&gt;
+.card-container { container:card / inline-size; }
+@container card (min-width:32rem) {
+  .heritage-card { display:grid;
+    grid-template-columns:minmax(0,.42fr) minmax(0,.58fr); }
+}</pre>
+<p class="note">This extract expects a real destination URL and image added by the integrator. The runnable preview uses labelled demonstration anchors. Full source: “MOLECULE 1”; live: <code>previews/molecule-heritage-card.html</code>.</p>
+</section>
+<section class="chapter"><p class="eyebrow">Molecule 02</p><h2>Search Form</h2>
+<figure><img src="https://us-tiangong-data.oss-accelerate.aliyuncs.com/skycode/video/2026-11-04/2117835489802240000.png" alt="Stacked and inline search forms with results"><figcaption>Visual preview: visible labels, category select, action and live result count.</figcaption></figure>
+<p><strong>Usage:</strong> allow a visitor to filter destination previews by phrase and category. The live example searches three sample entries locally; it does not claim a remote search API. Results include an announced count and an explicit zero-result state.</p>
+<p><strong>Responsive logic:</strong> <code>search</code> below 28rem stacks the field, filter and button. At ≥28rem the form becomes a horizontal row; the search field grows while the select and action retain useful widths. Never use placeholder text as the only label.</p>
+<pre>&lt;div class="search-container"&gt;
+  &lt;form class="search-form" role="search" data-demo-search&gt;
+    &lt;div class="search-form__field search-form__field--grow"&gt;
+      &lt;label for="q" class="search-form__label"&gt;Search sites&lt;/label&gt;
+      &lt;input id="q" class="input" type="search" name="q"&gt;
+    &lt;/div&gt;
+    &lt;button class="btn" type="submit"&gt;Search sites&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/div&gt;
+&lt;p id="search-status" role="status" aria-live="polite"&gt;&lt;/p&gt;
+&lt;ul&gt;&lt;li data-site="hundred islands" data-category="nature"&gt;
+  Hundred Islands
+&lt;/li&gt;&lt;/ul&gt;
+.search-container { container:search / inline-size; }
+.search-form { display:flex; flex-direction:column; }
+@container search (min-width:28rem) {
+  .search-form { flex-direction:row; align-items:flex-end; }
+}</pre>
+<p><strong>Behaviour contract:</strong> load <code>demo.js</code> for the local filter. Its demonstration handler expects result items with <code>data-site</code> and an element named <code>search-status</code>. Normalize <code>data-site</code> to lower case. Use unique input IDs if forms repeat. In Nuxt, replace the handler with reactive filtering and preserve labels, keyboard submission and polite announcements. Without JavaScript, keep all destination cards visible.</p>
+<p class="note">Full source: “MOLECULE 2” and <code>demo.js</code>; live: <code>previews/molecule-search-form.html</code>.</p>
+</section>
+<section class="chapter"><p class="eyebrow">Molecule 03</p><h2>Navigation Item</h2>
+<figure><img src="https://us-tiangong-data.oss-accelerate.aliyuncs.com/skycode/video/2026-11-04/2117835489914851328.png" alt="Navigation item at icon-only, labelled and expanded sizes"><figcaption>Visual preview: the accessible label remains present even when visually hidden.</figcaption></figure>
+<p><strong>Usage:</strong> one destination inside a primary or secondary navigation group. It combines icon, label, optional helper and optional badge. Put <code>aria-current="page"</code> on the link for the current route; do not assign it to every link.</p>
+<p><strong>Responsive logic:</strong> the <code>nav-item</code> wrapper ≤9rem visually hides its label and badge without removing the accessible label. From &gt;9rem to &lt;16rem show icon and label. At ≥16rem add the helper. Avoid an icon-only layout when icons are unfamiliar; an integrator can keep labels visible instead.</p>
+<pre>&lt;div class="nav-item"&gt;
+  &lt;a class="nav-item__link" href="destinations.html"
+     aria-current="page"&gt;
+    &lt;svg class="icon nav-item__icon" viewBox="0 0 24 24"
+         aria-hidden="true"&gt;
+      &lt;path d="M4 5h16v14H4z"/&gt;
+    &lt;/svg&gt;
+    &lt;span class="nav-item__text"&gt;
+      &lt;span class="nav-item__label"&gt;Destinations&lt;/span&gt;
+      &lt;span class="nav-item__desc"&gt;Explore the province&lt;/span&gt;
+    &lt;/span&gt;
+  &lt;/a&gt;
+&lt;/div&gt;
+.nav-item { container:nav-item / inline-size; }
+@container nav-item (max-width:9rem) {
+  .nav-item__label { position:absolute; width:1px; height:1px;
+    overflow:hidden; clip-path:inset(50%); }
+}
+@container nav-item (min-width:16rem) {
+  .nav-item__desc { display:block; }
+}</pre>
+<p><strong>Accessibility:</strong> current state uses an inset accent stripe and weight as well as colour. The anchor is keyboard-focusable and at least 44px high. Do not add <code>role="menuitem"</code> to ordinary website navigation links; retain familiar document navigation semantics.</p>
+<p class="note">Full source: “MOLECULE 3”; live: <code>previews/molecule-navigation-item.html</code>.</p>
+</section>
+<section class="chapter"><p class="eyebrow">Organism 01</p><h2>Heritage Grid</h2>
+<figure><img src="https://us-tiangong-data.oss-accelerate.aliyuncs.com/skycode/video/2026-11-04/2117835489988784128.png" alt="Heritage grid with three destination cards and parent width control"><figcaption>Visual preview: 1080px container; the slider demonstrates narrower states.</figcaption></figure>
+<p><strong>Usage:</strong> list related destinations in the main content region. The grid owns the number of columns; each child card owns its interior layout. This separation lets a card be reused in a full-width list and a narrow sidebar.</p>
+<p><strong>Responsive logic:</strong> query wrapper <code>heritage-grid</code>: below 40rem show one column; ≥40rem show two; ≥64rem show three. A wide grid does not force an individual card to be horizontal: the card sees its own allocated parent width.</p>
+<pre>&lt;section aria-labelledby="sites-heading"&gt;
+  &lt;h2 id="sites-heading" class="type-h2"&gt;Heritage sites&lt;/h2&gt;
+  &lt;div class="grid-container"&gt;
+    &lt;div class="heritage-grid"&gt;
+      &lt;!-- Repeat the complete card-container/article from Molecule 01. --&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+.grid-container { container:heritage-grid / inline-size; }
+.heritage-grid { display:grid; grid-template-columns:1fr;
+  gap:var(--grid-gap); }
+@container heritage-grid (min-width:40rem) {
+  .heritage-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@container heritage-grid (min-width:64rem) {
+  .heritage-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}</pre>
+<p><strong>Content and accessibility:</strong> use a section heading and logical card headings. Keep source order equal to reading order; do not rearrange cards solely through CSS. Provide a meaningful empty-state paragraph if filtering removes all cards. Never lazy-load all above-the-fold images indiscriminately; load below-fold cards lazily.</p>
+<p class="note">Full source: “ORGANISM 1”; live: <code>previews/organism-heritage-grid.html</code>. The preview contains three complete cards; use those as copyable markup, not the placeholder comment above.</p>
+</section>
+<section class="chapter"><p class="eyebrow">Organism 02</p><h2>Header Navigation</h2>
+<figure><img src="https://us-tiangong-data.oss-accelerate.aliyuncs.com/skycode/video/2026-11-04/2117835489967685632.png" alt="Mobile and desktop header navigation"><figcaption>Visual preview: disclosure menu and full-width navigation.</figcaption></figure>
+<p><strong>Usage:</strong> a consistent global masthead containing the brand, primary navigation and an exploration action. Include the skip link before repeated navigation. The compact version uses a non-modal disclosure, not a dialog.</p>
+<p><strong>Responsive logic:</strong> query <code>site-header</code>: below 48rem show the mobile menu button; ≥48rem show inline navigation and CTA; ≥60rem add the search shortcut. The expanded mobile menu is hidden in the wide layout. The supplied JavaScript updates <code>aria-expanded</code>, controls visibility and restores focus on Escape.</p>
+<pre>&lt;div class="header-container"&gt;&lt;header class="site-header"&gt;
+  &lt;a class="skip-link" href="#main"&gt;Skip to content&lt;/a&gt;
+  &lt;div class="site-header__bar"&gt;
+    &lt;a class="site-header__brand" href="index.html"&gt;Pangasinan&lt;/a&gt;
+    &lt;button class="site-header__menu-btn" data-menu-toggle
+      aria-label="Open navigation" aria-expanded="false"
+      aria-controls="mobile-nav"&gt;Menu&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;nav class="site-header__mobile-nav" id="mobile-nav"
+       aria-label="Primary" hidden&gt;
+    &lt;a class="nav-item__link" href="sites.html"&gt;Destinations&lt;/a&gt;
+  &lt;/nav&gt;
+&lt;/header&gt;&lt;/div&gt;
+&lt;main id="main" tabindex="-1"&gt;...&lt;/main&gt;
+.header-container { container:site-header / inline-size; }
+@container site-header (min-width:48rem) {
+  .site-header__nav { display:block; }
+  .site-header__menu-btn { display:none; }
+}
+@container site-header (min-width:60rem) {
+  .site-header__search { display:flex; }
+}</pre>
+<p class="note">This shortened extract illustrates the mobile structure; copy the full live example to include desktop links and actions too. Source: “ORGANISM 2”, <code>demo.js</code> and <code>previews/organism-header-navigation.html</code>. Do not trap focus in this non-modal disclosure.</p>
+</section>
+<section class="chapter"><h2>3. Build a new page using this library</h2>
+<ol>
+<li>Copy the relevant complete markup from <code>template/previews/</code>; retain its named wrapper and classes.</li>
+<li>Load the three shared stylesheets in order. Use a real language attribute, page title, main landmark and heading hierarchy.</li>
+<li>Compose the header organism, a page introduction, the search molecule and the grid organism. Repeat the card molecule for each content record.</li>
+<li>Replace example URLs and image paths. Use distinct control IDs, correct current-page state and site-specific link labels.</li>
+<li>Integrate search and menu state in Vue/Nuxt if creating the proposed application. Do not run both a Vue state handler and <code>demo.js</code> on the same control.</li>
+<li>Test at just below, exactly at and just above each breakpoint. Add a screenshot and usage note whenever a component changes.</li>
+</ol>
+<pre>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="viewport" content="width=device-width,initial-scale=1"&gt;
+  &lt;title&gt;Destinations | Pangasinan Heritage&lt;/title&gt;
+  &lt;link rel="stylesheet" href="styles/tokens.css"&gt;
+  &lt;link rel="stylesheet" href="styles/base.css"&gt;
+  &lt;link rel="stylesheet" href="styles/components.css"&gt;
+&lt;/head&gt;&lt;body&gt;
+  &lt;!-- Paste the complete Header Navigation here. --&gt;
+  &lt;main id="main" class="layout-shell" tabindex="-1"&gt;
+    &lt;div class="type-prose"&gt;
+      &lt;h1 class="type-h1"&gt;Discover Pangasinan&lt;/h1&gt;
+      &lt;p class="type-body"&gt;Explore its heritage destinations.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;!-- Paste Search Form, then Heritage Grid and complete cards. --&gt;
+  &lt;/main&gt;
+  &lt;script src="demo.js" defer&gt;&lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;</pre>
+<h3>Nuxt adaptation</h3>
+<p>Keep atoms/molecules/organisms in similarly named component directories. Convert repeated HTML to Vue props with typed content, use keyed loops for destination cards and retain semantic markup. Read content during generation and pass it to components; avoid embedding content-fetching credentials in the client. The integration configuration example is in <code>template/integration/</code>. It is not a complete application.</p>
+<h3>Maintenance contract</h3>
+<p>Change tokens before overriding individual component styles. Keep class names stable, document breaking changes, validate required content fields and review destination information. Do not add fee, booking, accessibility-facility or review claims without reliable sources and current confirmation.</p>
+</section>
+<section class="chapter"><h2>4. Verification and submission checklist</h2>
+<h3>Checks executed for this package</h3>
+<p>Chromium rendered all ten live examples and produced the included screenshots. Targeted local assertions checked card, search, navigation, grid and header breakpoint behaviour, search matches and zero results, menu open/close, Escape focus restoration, minimum small-button height and the narrow image crop. See <code>docs/verification-notes.md</code> for exact results and test instructions.</p>
+<p>These are component-level checks only. No production Nuxt build, deployed GitHub site, Lighthouse score, axe scan, physical-device test or complete screen-reader audit is claimed.</p>
+<h3>Before claiming WCAG 2.1 AA on the full site</h3>
+<ul>
+<li>Run an automated accessibility scan; resolve all relevant violations and manually inspect anything the scanner cannot decide.</li>
+<li>Use only Tab, Shift+Tab, Enter, Space and Escape. Confirm visible focus, logical order, no keyboard traps and working disclosure state.</li>
+<li>Check complete pages at 320 CSS pixels and at 200% zoom; test 400% reflow conditions appropriately. Ensure no loss of information or unnecessary horizontal scrolling.</li>
+<li>Test alt text, headings, landmarks, form labels and result announcements with a screen reader. Verify site-specific link names remain understandable.</li>
+<li>Audit actual foreground/background pairs and every essential control state. Test user text-spacing overrides and reduced-motion settings.</li>
+<li>Confirm responsive image sizing, copyright permission, broken-link handling and deep-link refresh after static deployment.</li>
+</ul>
+<p>WCAG requirements apply to complete pages and processes; the library alone is insufficient to claim conformance. Use the W3C criteria as the authoritative reference. <a href="#s3">[3]</a></p>
+<h3>Repository submission</h3>
+<ol>
+<li>Replace the student placeholder on both document covers. Review your institution's AI-assistance and attribution rules.</li>
+<li>Upload the ZIP contents into your own GitHub repository, preserving <code>report/</code>, <code>docs/</code>, <code>template/</code> and <code>.github/</code>.</li>
+<li>Verify the framework report PDF is under <code>report/</code> and this manual PDF is under <code>docs/</code>.</li>
+<li>To publish the library, set Pages source to GitHub Actions, allow the included workflow to run and test the resulting URL. Do not assume it is live before that succeeds.</li>
+<li>Submit the repository URL and any additional information requested by your instructor. Grade clearance remains the instructor's decision.</li>
+</ol>
+</section>
+<section class="chapter"><h2>5. References and asset provenance</h2>
+<ol class="refs">
+<li id="s1"><a href="https://atomicdesign.bradfrost.com/chapter-2/">Brad Frost — Atomic Design, Chapter 2.</a> Methodology source; accessed 6 November 2026.</li>
+<li id="s2"><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries">MDN — CSS Container Queries.</a> Named ancestor containment and descendant styling; accessed 6 November 2026.</li>
+<li id="s3"><a href="https://www.w3.org/WAI/WCAG21/quickref/">W3C — How to Meet WCAG 2.1.</a> Select version 2.1; accessibility requirements reference. Accessed 6 November 2026.</li>
+</ol>
+<p>The primary requirements source is the student's uploaded “2026 Activity 1.pdf,” two pages. All component screenshots were generated from the supplied local HTML/CSS examples. They are actual renders, not external stock depictions of the library.</p>
+<h3>Photographs inside example renders</h3>
+<table><thead><tr><th>Subject</th><th>Original reference / attribution page</th></tr></thead><tbody>
+<tr><td>Hundred Islands</td><td><a href="https://islandhoppinginthephilippines.com/luzon/hundred-islands-national-park/">Island Hopping in the Philippines — Hundred Islands National Park.</a></td></tr>
+<tr><td>Cape Bolinao Lighthouse</td><td><a href="https://elgu-bolinao-pangasinan-news.e.gov.ph/about">Bolinao eLGU — About Bolinao.</a></td></tr>
+<tr><td>Balungao pool</td><td><a href="https://ilovepangasinan.com/balungao-hilltop-adventure-resort-hot-and-cold-springs/">I Love Pangasinan — Balungao Hilltop Adventure Resort.</a></td></tr>
+<tr><td>Provincial Capitol</td><td>Retrieved through public image search for “Pangasinan provincial capitol Lingayen.” Original author and licence were not established. The image is limited to the educational media preview; replace with a permission-cleared photograph before public release.</td></tr>
+</tbody></table>
+<p>Attribution identifies provenance; it does not establish permission. No licence is asserted for these third-party images. Their remote display and appearance in screenshots serve the educational reference package. For real publication, obtain permission or replace them with openly licensed or locally commissioned assets, record author/licence/URL and generate optimized derivatives. The basic SVG glyphs and HTML/CSS examples are newly authored UI code.</p>
+<h3>MIT-level rationale in plain language</h3>
+<p>Reusable design is not just visual consistency. A shared token can fix contrast everywhere; a card molecule can carry an accessible destination pattern across pages; an organism can change layout without changing content. Container queries make this reuse depend on available space rather than a guessed device type. The architectural value is reduced coupling: content, presentation, interaction and hosting can evolve with fewer unintended effects.</p>
+</section>
+</article></body></html>

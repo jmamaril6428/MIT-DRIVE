@@ -1,0 +1,16 @@
+// Integration example, not a complete Nuxt application.
+// Select a currently supported, security-patched Nuxt 3 release and lock it.
+export default defineNuxtConfig({
+  ssr: true,
+  app: { baseURL: process.env.NUXT_APP_BASE_URL || "/" },
+  nitro: {
+    prerender: {
+      routes: ["/", "/sites/hundred-islands", "/sites/cape-bolinao", "/sites/balungao"]
+    }
+  },
+  css: [
+    "~/assets/css/tokens.css",
+    "~/assets/css/base.css",
+    "~/assets/css/components.css"
+  ]
+});

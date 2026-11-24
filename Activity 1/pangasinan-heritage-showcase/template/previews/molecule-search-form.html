@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Search Form</title>
+<link rel="stylesheet" href="../styles/tokens.css"><link rel="stylesheet" href="../styles/base.css">
+<link rel="stylesheet" href="../styles/components.css"><link rel="stylesheet" href="preview.css">
+</head><body class="preview-page">
+<header class="preview-head"><p class="preview-kicker">Molecule</p><h1 class="preview-title">Search Form</h1><p class="preview-note">Explicit labels, native controls and a status announcement. This example filters a local demonstration list without a server.</p></header>
+<main class="preview-stack">
+<section class="preview-row"><span class="preview-row__label">320px parent — stacked</span>
+<div class="search-container" style="width:320px">
+<form class="search-form" data-demo-search role="search" aria-label="Compact heritage search">
+<div class="search-form__field search-form__field--grow"><label class="search-form__label" for="q-small">Search heritage sites</label><input class="input" id="q-small" name="q" type="search" placeholder="Try Bolinao"></div>
+<div class="search-form__field search-form__field--filter"><label class="search-form__label" for="category-small">Category</label><select class="select" id="category-small" name="category"><option value="">All categories</option><option value="nature">Nature</option><option value="landmark">Landmark</option><option value="wellness">Wellness</option></select></div>
+<button class="btn search-form__submit" type="submit">Search sites</button></form></div></section>
+<section class="preview-row"><span class="preview-row__label">760px parent — inline</span>
+<div class="search-container" style="width:760px">
+<form class="search-form" data-demo-search role="search" aria-label="Wide heritage search">
+<div class="search-form__field search-form__field--grow"><label class="search-form__label" for="q-wide">Search heritage sites</label><input class="input" id="q-wide" name="q" type="search" placeholder="Try Bolinao"></div>
+<div class="search-form__field search-form__field--filter"><label class="search-form__label" for="category-wide">Category</label><select class="select" id="category-wide" name="category"><option value="">All categories</option><option value="nature">Nature</option><option value="landmark">Landmark</option><option value="wellness">Wellness</option></select></div>
+<button class="btn search-form__submit" type="submit">Search sites</button></form></div></section>
+<section><h2 class="type-h3">Demonstration results</h2><p id="search-status" role="status" aria-live="polite">3 sample sites available.</p>
+<ul><li data-site="hundred islands alaminos" data-category="nature">Hundred Islands — Alaminos City</li><li data-site="cape bolinao lighthouse" data-category="landmark">Cape Bolinao Lighthouse — Bolinao</li><li data-site="balungao hot springs" data-category="wellness">Balungao Hot Springs — Balungao</li></ul></section>
+</main><script src="../demo.js"></script></body></html>
